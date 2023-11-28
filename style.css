@@ -411,7 +411,7 @@ ul {
   padding: 8px;
   background-color: #fff;
   gap: 16px;
-  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .dropdown-trigger {
@@ -432,10 +432,13 @@ ul {
   border: 2px solid var(--focused-color);
   background-color: #fff;
 }
-.setup-guide-container > .setup-guide-content {
+.setup-guide-container {
+  padding: 8px;
+  gap: 16px;
+}
+.setup-guide-container .setup-guide-content {
   padding: 8px;
 }
-
 .setup-guide-container > .setup-guide-content > .setup-text > p:nth-child(1) {
   color: var(--text-color-100);
   margin-bottom: 2px;
@@ -444,7 +447,7 @@ ul {
 .setup-guide-container > .setup-guide-content > .setup-text > p:nth-child(2) {
   color: var(--text-color-100);
   font-weight: 400;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .setup-progress {
@@ -482,16 +485,14 @@ Amen*/
 /* Onboarding */
 
 .collapsable-setup-container {
-  margin-top: 16px;
-}
-#onboarding-todolists {
-  max-height: 0;
-  overflow: hidden;
+  max-height: 1000px;
+  gap: 2.5px;
   transition: max-height 300ms cubic-bezier(0.19, 0.91, 0.38, 1);
 }
 
-#onboarding-todolists.lists-hidden {
-  max-height: 1000px;
+.collapsable-setup-container.lists-hidden {
+  max-height: 0;
+  overflow: hidden;
 }
 
 .checkbox-buttons {
@@ -504,13 +505,11 @@ Amen*/
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* border: 2px solid #b5b5b5; */
   transition: all 100ms ease-in;
 }
 
 .checkbox-buttons:focus {
-  outline: 2px solid var(--focused-color);
-  outline-offset: 3px;
+  border: 2px solid var(--focused-color);
 }
 
 .checkbox-buttons:hover .default-list-icon circle {
@@ -528,41 +527,65 @@ Amen*/
 /* this is the whole toggle container to show or hide the todolist */
 /* the list guide for the question */
 .list-guide {
-  padding: 8px 8px 12px 8px;
-  gap: 8px;
-  border-radius: 10px;
-  margin-bottom: 0.115rem;
-  justify-content: flex-start;
-  /* align-items: s; */
+  max-height: 40px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in;
 }
-.list-guide:hover {
+
+.list-guide.list-guide-active {
+  max-height: 1000px;
+}
+.list-guide .list-guide-content:not(.list-guide-active):hover {
   background-color: #e7e7e7;
 }
 
 /* for the active list item */
-.list-guide-active {
+.list-guide-active .list-guide-content {
   background: #f3f3f3;
 }
+
+.list-guide-active .list-guide-content:hover {
+  background-color: #f3f3f3 !important;
+}
+
 /* the text and the button and the image container*/
 .list-guide-content {
-  align-items: flex-start;
+  padding: 8px 8px 12px 8px;
+  border-radius: 10px;
 }
 
 .list-guide-content-text {
-  padding: 2px 0px;
+  padding: 3px 0px;
   gap: 16px;
   flex: 1 0 0;
   height: auto;
+  margin-left: 5px;
 }
+
 /* the tricky button text style  */
 .list-guide-content-text button {
   color: var(--text-color-100);
   font-style: normal;
   font-weight: 500;
+  border-radius: 6px;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin: -8px 0;
 }
 /* inactive button style */
 .list-guide-active .list-guide-content .list-guide-content-text .list-trigger {
   font-weight: 600;
+  margin-top: -8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: default;
+  display: flex;
+  padding: 0.5rem 0;
+  text-align: left;
+
+  border-radius: 6px;
 }
 /* the inner text of the list */
 .todo-text {
@@ -582,28 +605,63 @@ Amen*/
   text-decoration: underline;
 }
 
-.list-guide-content-text button:last-child,
-.list-guide-content-text #list-two button {
+#list-two {
+  gap: 16px;
+}
+.list-guide-content-text .list-btn,
+#list-two a:nth-child(2) {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #323232;
+  font-weight: 600;
+}
+
+.list-guide-content-text > a,
+#list-two a:nth-child(1) {
   color: #f6f3f6;
   font-size: 12px;
   line-height: 130%;
   font-weight: 600;
   padding: 6px 12px;
   border-radius: 6px;
-  border-top: 1.5px solid var(--stroke-light-100, rgba(255, 255, 255, 0.2));
-  border-right: 1.5px solid var(--stroke-light-100, rgba(255, 255, 255, 0.2));
-  border-left: 1.5px solid var(--stroke-light-100, rgba(255, 255, 255, 0.2));
+  border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.2);
   background: #404040;
   box-shadow: 0px 0px 0px 1.5px #333, 0px 1px 0px 1.5px #333,
     0px 2px 0px 0px #000;
 }
-#list-two {
-  gap: 16px;
+
+.list-guide-content-text > a:focus,
+#list-two a:nth-child(1):focus {
+  border-radius: 6px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: #404040;
+  box-shadow: 0px 0px 0px 5px #005bd3, 0px 0px 0px 3px #fff,
+    0px 0px 0px 1.5px #333;
+}
+.list-guide-content-text > a:active,
+#list-two a:nth-child(1):active {
+  border-radius: 6px;
+  background: #2b2b2b;
+  box-shadow: 0px 0px 0px 1.5px #333, 0px 3px 0px 0px #000 inset;
+}
+#list-two a:nth-child(2):hover {
+  border-radius: 6px;
+  background: #e7e7e7;
+}
+#list-two a:nth-child(2):active {
+  border-radius: 6px;
+  background: #e0e0e0;
 }
 
-#list-two p {
-  padding: 6px 12px;
-  color: #323232;
+#list-two a:nth-child(2):focus,
+#listTrigger:focus {
+  border-radius: 6px;
+  border: 2px solid var(--focused-color);
+  background: #fff;
 }
 
 .loading-spinner-icon {
@@ -675,11 +733,13 @@ Amen*/
     max-width: 800px;
   }
 
+  .list-guide-active .list-guide-content .list-guide-content-text {
+    max-width: 483px;
+  }
+
   .list-guide-active .list-guide-content .list-guide-content-image {
     display: block;
-  }
-  .list-guide-active .list-guide-content {
-    gap: 96px;
+    margin-left: 96px;
   }
 }
 @keyframes fadeInOut {

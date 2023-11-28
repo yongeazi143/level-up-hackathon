@@ -198,7 +198,6 @@ function onboardingFunctionality() {
   const progress = document.getElementById("progress");
   const progressBar = document.getElementById("progress-bar");
   const todoContainer = document.querySelector("#onboarding-todolists");
-  const todoList = todoContainer.querySelectorAll("li");
   const checkButton = document.querySelectorAll("#checkboxButton");
   const allCheckBoxStatus = document.querySelectorAll("#checkbox-status");
   const HIDDEN_CLASS = "hidden";
@@ -221,14 +220,6 @@ function onboardingFunctionality() {
     chevronUp.classList.remove(HIDDEN_CLASS);
     button.ariaExpanded = true;
     todoContainer.classList.toggle("lists-hidden");
-    // add event listener to checkbox buttons
-    // get the index  of the clicked button
-    // create an anomnmous function
-    checkButton.forEach((button, buttonIndex) => {
-      button.addEventListener("click", () => {
-        handleCheckButtonClick(button, buttonIndex);
-      });
-    });
   };
 
   // time for God to take control, for i am the handmaid of the lord let it be done according to his word.
@@ -256,12 +247,23 @@ function onboardingFunctionality() {
     const checkBoxStatus = allCheckBoxStatus.item(buttonIndex);
 
     // increase count
-    const increaseCount = () => {
-      if (count <= 5) {
-        count += 1;
-        progress.innerText = count;
+    function increaseCount() {
+      if (count < 5) {
+        count++;
       }
-    };
+      updateCount();
+    }
+    //  dcrease count
+    function decreaseCount() {
+      if (count > 0) {
+        count--;
+      }
+      updateCount();
+    }
+    //  update count
+    function updateCount() {
+      progress.innerText = count;
+    }
 
     const resetAriaLabelAsDone = () => {
       button.ariaLabel = button.ariaLabel.replace("as done", "as not done");
@@ -271,12 +273,45 @@ function onboardingFunctionality() {
       button.ariaLabel = button.ariaLabel.replace("as not done", "as done");
     };
 
+    const handleCheckButtonToggle = () => {
+      // when i click on the checkList
+      // get the index of the checkbox
+
+      // get container for that checkbox
+      const checkBoxContainer = todoContainer
+        .querySelectorAll("li")
+        .item(buttonIndex);
+      const isExpanded =
+        checkBoxContainer.classList.contains("list-guide-active");
+
+      // it checks if it is expanded
+      if (isExpanded) {
+        const stepsButtons = document.querySelectorAll("#listTrigger");
+        // Convert the NodeList to an array and filter check buttons without the class "completed"
+        const incompleteCheckButtons = Array.from(checkButton).filter(
+          (button) => !button.classList.contains("completed")
+        );
+        //check if the button index is the lastElement
+        if (
+          buttonIndex === stepsButtons.length - 1 ||
+          incompleteCheckButtons.length > 0
+        ) {
+        } else {
+          stepsButtons.item(buttonIndex + 1).click();
+        }
+      }
+      // if it is expanded
+      // it closes it expanded container
+      // look for the next element and expands it
+      // if not expanded it does noting.
+    };
+
     const handleCompleted = () => {
       defaultCheckButton.classList.add(HIDDEN_CLASS);
       loadingCheckButton.classList.remove(HIDDEN_CLASS);
       checkBoxStatus.ariaLabel = "Loading, Please wait...";
       button.disabled = true;
-      // show the completed icon after 3s
+      // show the completed icon after 500ms
       setTimeout(() => {
         loadingCheckButton.classList.add(HIDDEN_CLASS);
         completedCheckButton.classList.remove(HIDDEN_CLASS);
@@ -288,17 +323,8 @@ function onboardingFunctionality() {
 
         checkBoxStatus.ariaLabel = `Successful marked as done`;
         button.focus();
-      }, 3000);
-    };
-
-    // decrease the count
-    const decreaseCount = () => {
-      if (count <= 0) {
-        count = 0;
-      } else {
-        count -= 1;
-      }
-      progress.innerText = count;
+        handleCheckButtonToggle();
+      }, 2000);
     };
 
     const handleNotCompleted = () => {
@@ -318,28 +344,26 @@ function onboardingFunctionality() {
         resetAriaLabelAsNotDone();
 
         checkBoxStatus.ariaLabel = `Successful marked as not done`;
-      }, 3000);
+      }, 2000);
     };
     // handle if completed or not
-    (function () {
-      const markAsDone = checkButton
-        .item(buttonIndex)
-        .classList.contains("completed");
+    const markAsDone = checkButton
+      .item(buttonIndex)
+      .classList.contains("completed");
 
-      if (markAsDone) {
-        handleNotCompleted();
-      } else {
-        handleCompleted();
-      }
-    })();
+    if (markAsDone) {
+      handleNotCompleted();
+    } else {
+      handleCompleted();
+    }
   };
 
   const toggleTheDodoList = () => {
     isVisible = !isVisible;
     if (isVisible) {
-      showTodoList();
-    } else {
       hideTodoList();
+    } else {
+      showTodoList();
     }
   };
 
@@ -348,21 +372,77 @@ function onboardingFunctionality() {
       toggleTheDodoList();
     }
   };
+
+  // add event listener to checkbox buttons
+  // get the index  of the clicked button
+  // create an anomnmous function
+  checkButton.forEach((button, buttonIndex) => {
+    button.addEventListener("click", () => {
+      handleCheckButtonClick(button, buttonIndex);
+    });
+  });
   button.addEventListener("click", toggleTheDodoList);
   button.addEventListener("keyup", (event) => handleToggleOnKeyPress(event));
-  // if isVisibele is true
-  // show the all the list element
-  // else
-  // hide the todolist
-  // if the checkbox is clicked
-  // mark as done [update the progress bar]
-  // if it is clicked for the second time
-  // mark as not done
-  // if a list question is clicked
-  // display the full content for that list item
-  // if another list is clicked
-  // toggle the prev and display
-  // required element
+
+  //
+  OnboardingStepsFunctionality(todoContainer);
+}
+
+// On boarding step functionality
+function OnboardingStepsFunctionality(todoContainer) {
+  const stepsButtons = document.querySelectorAll("#listTrigger");
+  const todoList = todoContainer.querySelectorAll("li");
+  const HIDDEN_CLASS = "hidden";
+  const toggleSteps = (stepButton, stepButtonIndex) => {
+    //when i click on a button
+    // get the container element of the button
+    const stepList = todoList.item(stepButtonIndex);
+    // check the state of the button container element clicked
+    const activeList = stepList.classList.contains("list-guide-active");
+    // if it active or not
+    if (activeList) {
+      // disable the button
+      stepButton.disabled = true;
+      // if active do noting
+    } else {
+      // if the list does not contain the active class
+      // check for the list with the active class
+      let activeElementInList =
+        todoContainer.querySelector(".list-guide-active");
+      if (activeElementInList) {
+        // get all the necessary element
+        const pTag = activeElementInList.querySelector(
+          '[data-role="todo-text"]'
+        );
+        const aTag = activeElementInList.querySelector(
+          '[data-role="todo-link"]'
+        );
+        const bTag = activeElementInList.querySelector("#listTrigger");
+        activeElementInList.classList.remove("list-guide-active");
+        // Close the active element
+        pTag.classList.add(HIDDEN_CLASS);
+        aTag.classList.add(HIDDEN_CLASS);
+        // remove the disable attribut
+        bTag.disabled = false;
+      }
+      // when it close then open clicked button
+      setTimeout(() => {
+        // add the active class
+        const pTag = stepList.querySelector('[data-role="todo-text"]');
+        const aTag = stepList.querySelector('[data-role="todo-link"]');
+        stepList.classList.add("list-guide-active");
+        pTag.classList.remove(HIDDEN_CLASS);
+        aTag.classList.remove(HIDDEN_CLASS);
+      }, 50);
+    }
+  };
+
+  // add event listener for all the buttons
+  stepsButtons.forEach((stepButton, stepButtonIndex) => {
+    stepButton.addEventListener("click", () => {
+      toggleSteps(stepButton, stepButtonIndex);
+    });
+  });
 }
 
 /**
@@ -383,4 +463,5 @@ userAccountMenuFunctionality();
 onboardingFunctionality();
 removePricing();
 
-//handle Automatic toggle
+//! I Love Jesus
+//! I CAN DO IT AND I WILL BE SUCESSFULL
