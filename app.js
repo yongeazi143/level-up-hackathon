@@ -293,9 +293,8 @@ function onboardingFunctionality() {
         );
         //check if the button index is the lastElement
         if (
-          buttonIndex === stepsButtons.length - 1 ||
-          incompleteCheckButtons.length > 0
-        ) {
+          buttonIndex === stepsButtons.length - 1) {
+//do something
         } else {
           stepsButtons.item(buttonIndex + 1).click();
         }
