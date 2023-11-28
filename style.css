@@ -7,6 +7,7 @@
 body {
   font-family: "Inter", sans-serif;
   background-color: #f1f1f1;
+  /* overflow: hidden; */
 }
 
 a {
@@ -91,10 +92,6 @@ ul {
 }
 
 /* Custom Styles */
-
-.min-width {
-  min-width: 213px;
-}
 
 .text-sm {
   font-size: 12px;
@@ -187,8 +184,13 @@ ul {
 
 .notification {
   background-color: var(--bg-gray-200);
-  padding: 1px;
+  padding: 6px;
   border-radius: 0.5rem;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .notification:hover {
