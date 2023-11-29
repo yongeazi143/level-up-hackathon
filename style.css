@@ -526,6 +526,14 @@ Amen*/
 .list-trigger {
   background-color: transparent;
 }
+
+.list-guide-active
+  .list-guide-content
+  .list-guide-content-text
+  #listTrigger: {
+  border: none;
+  background-color: transparent;
+}
 /* this is the whole toggle container to show or hide the todolist */
 /* the list guide for the question */
 .list-guide {
@@ -660,7 +668,7 @@ Amen*/
 }
 
 #list-two a:nth-child(2):focus,
-#listTrigger:focus {
+#listTrigger:focus-visible {
   border-radius: 6px;
   border: 2px solid var(--focused-color);
   background: #fff;

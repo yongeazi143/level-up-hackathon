@@ -421,8 +421,18 @@
             Use this personalized guide to get your store up and running.
           </p>
           <div class="setup-progress flex items-center">
-            <p class="text-md"><span id="progress"></span> / 5 completed</p>
-            <div class="progress-container">
+            <p class="text-md">
+              <span
+                id="progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="5"
+                aria-valuenow="0"
+                aria-label="progress bar for Onboaring Items"
+              ></span>
+              / 5 completed
+            </p>
+            <div class="progress-container" aria-hidden="true">
               <div class="progress-bar" id="progress-bar"></div>
             </div>
           </div>

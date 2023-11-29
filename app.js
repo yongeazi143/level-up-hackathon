@@ -206,7 +206,7 @@ function onboardingFunctionality() {
   // counter to track the progress
   let count = 0;
   // setting the progress
-  progress.innerText = 0;
+  progress.innerText = count;
   //hide
   const hideTodoList = () => {
     chevronDown.classList.remove(HIDDEN_CLASS);
@@ -245,24 +245,27 @@ function onboardingFunctionality() {
       .item(buttonIndex)
       .querySelector(".completed-icon");
     const checkBoxStatus = allCheckBoxStatus.item(buttonIndex);
-
     // increase count
     function increaseCount() {
       if (count < 5) {
         count++;
       }
-      updateCount();
+      updateCountAndAria();
     }
-    //  dcrease count
+
+    // decrease count
     function decreaseCount() {
       if (count > 0) {
         count--;
       }
-      updateCount();
+      updateCountAndAria();
     }
-    //  update count
-    function updateCount() {
+
+    // update count and ARIA attributes
+    function updateCountAndAria() {
       progress.innerText = count;
+      progress.setAttribute("aria-valuenow", count);
+      progress.setAttribute("aria-live", "polite");
     }
 
     const resetAriaLabelAsDone = () => {
@@ -454,11 +457,12 @@ function removePricing() {
   closeButton.addEventListener("click", handleClose);
 }
 //chevron to show and hide the question
-notificationFunctionailty();
-searchFunctionality();
-userAccountMenuFunctionality();
-onboardingFunctionality();
-removePricing();
-
+document.addEventListener("DOMContentLoaded", () => {
+  notificationFunctionailty();
+  searchFunctionality();
+  userAccountMenuFunctionality();
+  onboardingFunctionality();
+  removePricing();
+});
 //! I Love Jesus
 //! I CAN DO IT AND I WILL BE SUCESSFULL
